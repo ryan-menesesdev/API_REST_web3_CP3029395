@@ -1,0 +1,23 @@
+const express = require('express');
+const dotenv = require ('dotenv');
+const sequelize = require('./config/database.js');
+const clienteRoutes = require('./routes/cliente.routes.js');
+
+dotenv.config();
+
+const app = express();
+
+app.use(express.json());
+app.use('/clientes', clienteRoutes);
+
+(async () => {
+    try {
+        await sequelize.sync({ alter: true });
+        console.log('Cliente DB sincronizado!');
+        app.listen(process.env.PORT, () => {
+            console.log(`Cliente Service rodando na porta ${process.env.PORT}`);
+        });
+    } catch (err) {
+        console.error('Erro ao iniciar o Cliente Service:', err);
+    }
+})();
